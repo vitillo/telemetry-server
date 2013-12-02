@@ -40,7 +40,6 @@ class MongoImporter:
         p.start()
         process_list.append(p)
 
-
     def _enqueue_filenames(self, input_directory):
         for root, _, files in os.walk(input_directory):
             for f in files:
@@ -80,13 +79,11 @@ class MongoImporter:
             print(e)
             pass
 
-
     def _master(self, input_directory):
         self._enqueue_filenames(input_directory)
 
         for worker in range(0, self._n_workers):
             self._queue.put(None)
-
 
     def _worker(self):
         while True:
