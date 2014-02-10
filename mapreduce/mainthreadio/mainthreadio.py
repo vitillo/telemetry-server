@@ -28,7 +28,7 @@ def map(k, d, v, cx):
     if not "fileIOReports" in parsed:
         return
 
-    if not parsed[fileIOReports]:
+    if not parsed["fileIOReports"]:
         return
 
     cx.write(safe_key([submission_date, appName, appVersion, appUpdateChannel, "TOTAL"]), [0, 0, 0, 0, 0, 0])
