@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get install python-numpy
+
 OUTPUT=output
 TODAY=$(date +%Y%m%d)
 if [ ! -d "$OUTPUT" ]; then
