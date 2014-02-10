@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get install -f python-numpy
+sudo apt-get --yes install python-numpy
 
 OUTPUT=output
 TODAY=$(date +%Y%m%d)
