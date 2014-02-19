@@ -1,1 +1,1 @@
-submission_date,app_name,app_version,app_update_channel,filename,submission_count,median_time,median_count
+filename,submission_count,time,n_opens,n_read,n_write,n_fsync,n_stat,os,disk

@@ -2,6 +2,8 @@ import simplejson as json
 import numpy
 import io
 import csv
+import scipy.stats
+
 from string import maketrans
 
 def clean(s):
@@ -31,10 +33,14 @@ def map(k, d, v, cx):
     if not parsed["fileIOReports"]:
         return
 
-    cx.write(safe_key([submission_date, appName, appVersion, appUpdateChannel, "TOTAL"]), [0, 0, 0, 0, 0, 0])
+    disk = parsed['info'].get('profileHDDModel', "NA")
+    os = parsed['info']['OS']
 
     for f, arr in parsed["fileIOReports"].iteritems():
-        cx.write(safe_key([submission_date, appName, appVersion, appUpdateChannel, clean(f)]), arr)
+        arr.append(os)
+        arr.append(disk)
+        cx.write(safe_key(["TOTAL"]), arr)
+        cx.write(safe_key([clean(f)]), arr)
 
 def setup_reduce(cx):
     cx.field_separator = ","
@@ -48,22 +54,29 @@ def reduce(k, v, cx):
     n_writes = []
     n_fsyncs = []
     n_stats = []
-    n_pings = 0
+    n_pings = len(v)
 
-    for total, n_open, n_read, n_write, n_fsync, n_stat in v:
-        totals.append(total)
-        n_opens.append(n_open)
-        n_reads.append(n_read)
-        n_writes.append(n_write)
-        n_fsyncs.append(n_fsync)
-        n_stats.append(n_stat)
-        n_pings += 1
+    if n_pings > 10000:
+        for total, n_open, n_read, n_write, n_fsync, n_stat, os, disk in v[:n_pings/100]:
+            cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), os, disk]))
+            #totals.append(total)
+            #n_opens.append(n_open)
+            #n_reads.append(n_read)
+            #n_writes.append(n_write)
+            #n_fsyncs.append(n_fsync)
+            #n_stats.append(n_stat)
 
-        count = n_open + n_read + n_write + n_fsync + n_stat
-        counts.append(count)
+            #count = n_open + n_read + n_write + n_fsync + n_stat
+            #counts.append(count)
 
-    if n_pings > 100:
         # Output fields:
         # submission_date, app_name, app_version
         # app_update_channel, filename, submission_count, median_time, median_count
-        cx.write(k, ",".join([str(n_pings), str(numpy.median(totals)), str(numpy.median(count))]))
+        #cx.write(k, ",".join([str(n_pings),
+                             #str(scipy.stats.scoreatpercentile(totals, 90)),
+                             #str(scipy.stats.scoreatpercentile(count, 90)),
+                             #str(scipy.stats.scoreatpercentile(n_opens, 90)),
+                             #str(scipy.stats.scoreatpercentile(n_reads, 90)),
+                             #str(scipy.stats.scoreatpercentile(n_writes, 90)),
+                             #str(scipy.stats.scoreatpercentile(n_fsyncs, 90)),
+                             #str(scipy.stats.scoreatpercentile(n_stats, 90)) ]))

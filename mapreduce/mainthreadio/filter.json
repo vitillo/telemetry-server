@@ -15,15 +15,15 @@
     },
     {
       "field_name": "appVersion",
-      "allowed_values": "29.0a1"
+      "allowed_values": "30.0a1"
     },
     {
       "field_name": "appBuildID",
-      "allowed_values": "20140203030203"
+      "allowed_values": "20140217030202"
     },
     {
       "field_name": "submission_date",
-      "allowed_values": ["20140205"]
+      "allowed_values": ["20140218"]
     }
   ]
 }

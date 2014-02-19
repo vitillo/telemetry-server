@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get --yes install python-numpy
+sudo apt-get --yes install python-numpy python-scipy
 
 OUTPUT=output
 TODAY=$(date +%Y%m%d)
@@ -26,7 +26,7 @@ if [ -z "$TARGET" ]; then
 fi
 
 echo "Today is $TODAY, and we're gathering mainthreadio data for $TARGET"
-sed -r "s/__TARGET_DATE__/$TARGET/" filter_template.json > filter.json
+#sed -r "s/__TARGET_DATE__/$TARGET/" filter_template.json > filter.json
 
 BASE=$(pwd)
 FINAL_DATA_FILE=$BASE/$OUTPUT/mainthreadio$TARGET.csv
@@ -40,7 +40,7 @@ python -u -m mapreduce.job $BASE/mainthreadio.py \
   --data-dir $BASE/data \
   --work-dir $BASE/work \
   --output $RAW_DATA_FILE \
-  --bucket telemetry-published-v1 #--data-dir $BASE/work/cache --local-only
+  --bucket telemetry-published-v1 --data-dir $BASE/work/cache --local-only
 
 echo "Mapreduce job exited with code: $?"
 
@@ -71,7 +71,7 @@ for f in $(seq 0 6); do
         cp $BASE/$OUTPUT/mainthreadio$DAY.csv.gz ./
     else
         echo "Fetching $DAY"
-	aws s3 cp s3://telemetry-public-analysis/mainthreadio/data/mainthreadio$DAY.csv.gz ./mainthreadio$DAY.csv.gz
+	#aws s3 cp s3://telemetry-public-analysis/mainthreadio/data/mainthreadio$DAY.csv.gz ./mainthreadio$DAY.csv.gz
     fi
 done
 echo "Creating weekly data for $MONDAY to $SUNDAY"
