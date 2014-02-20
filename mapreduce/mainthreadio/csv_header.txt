@@ -1,1 +1,1 @@
-filename,submission_count,time,n_opens,n_read,n_write,n_fsync,n_stat,os,disk
+filename,time,n_opens,n_read,n_write,n_fsync,n_stat,arch,arch_vers,disk,addons

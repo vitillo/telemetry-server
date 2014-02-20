@@ -34,12 +34,17 @@ def map(k, d, v, cx):
         return
 
     disk = parsed['info'].get('profileHDDModel', "NA")
-    os = parsed['info']['OS']
+    arch = parsed['info']['arch']
+    arch_vers = parsed['info']['version']
+    addons = parsed['info'].get('addons', "")
+    addons = addons.replace(',',';')
 
     for f, arr in parsed["fileIOReports"].iteritems():
-        arr.append(os)
+        arr.append(arch)
+        arr.append(arch_vers)
         arr.append(disk)
-        cx.write(safe_key(["TOTAL"]), arr)
+        arr.append(addons)
+        #cx.write(safe_key(["TOTAL"]), arr)
         cx.write(safe_key([clean(f)]), arr)
 
 def setup_reduce(cx):
@@ -57,8 +62,8 @@ def reduce(k, v, cx):
     n_pings = len(v)
 
     if n_pings > 10000:
-        for total, n_open, n_read, n_write, n_fsync, n_stat, os, disk in v[:n_pings/100]:
-            cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), os, disk]))
+        for total, n_open, n_read, n_write, n_fsync, n_stat, arch, arch_vers, disk, addons, in v[:n_pings/2]:
+            cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), arch_vers, disk, addons]))
             #totals.append(total)
             #n_opens.append(n_open)
             #n_reads.append(n_read)
