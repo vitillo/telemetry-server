@@ -51,14 +51,6 @@ def setup_reduce(cx):
     cx.field_separator = ","
 
 def reduce(k, v, cx):
-    totals = []
-    avgs = []
-    counts = []
-    n_opens = []
-    n_reads = []
-    n_writes = []
-    n_fsyncs = []
-    n_stats = []
     n_pings = len(v)
 
     if n_pings > 10000:

@@ -40,7 +40,7 @@ python -u -m mapreduce.job $BASE/mainthreadio.py \
   --data-dir $BASE/data \
   --work-dir $BASE/work \
   --output $RAW_DATA_FILE \
-  --bucket telemetry-published-v1 #--data-dir $BASE/work/cache --local-only
+  --bucket telemetry-published-v1 --data-dir $BASE/work/cache --local-only
 
 echo "Mapreduce job exited with code: $?"
 

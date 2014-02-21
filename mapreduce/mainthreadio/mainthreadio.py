@@ -52,23 +52,12 @@ def setup_reduce(cx):
     cx.field_separator = ","
 
 def reduce(k, v, cx):
-    totals = []
-    avgs = []
-    counts = []
-    n_opens = []
-    n_reads = []
-    n_writes = []
-    n_fsyncs = []
-    n_stats = []
     n_pings = len(v)
-
     top = 0
-    cnt = 0
-    for entry in v[:n_pings/2]:
-        if entry[0] > v[top]:
-            top = cnt
 
-        cnt += 1
+    for idx, entry in enumerate(v[:n_pings/2]):
+        if entry[0] > v[top]:
+            top = idx
 
     total, n_open, n_read, n_write, n_fsync, n_stat, arch, OS_version, disk, addons, addons_count = v[top]
     cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), arch, OS_version, disk, addons, str(addons_count)]))
