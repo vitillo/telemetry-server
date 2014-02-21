@@ -45,7 +45,6 @@ def map(k, d, v, cx):
         arr.append(disk)
         arr.append(addons)
         arr.append(addons.count(';'))
-
         cx.write(safe_key([clean(f)]), arr)
 
 def setup_reduce(cx):
@@ -62,13 +61,6 @@ def reduce(k, v, cx):
     n_stats = []
     n_pings = len(v)
 
-    top = 0
-    cnt = 0
-    for entry in v[:n_pings/2]:
-        if entry[0] > v[top]:
-            top = cnt
-
-        cnt += 1
-
-    total, n_open, n_read, n_write, n_fsync, n_stat, arch, OS_version, disk, addons, addons_count = v[top]
-    cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), arch, OS_version, disk, addons, str(addons_count)]))
+    if n_pings > 10000:
+        for total, n_open, n_read, n_write, n_fsync, n_stat, arch, OS_version, disk, addons, addons_count in v[:n_pings/2]:
+            cx.write(k, ",".join([str(total), str(n_open), str(n_read), str(n_write), str(n_fsync), str(n_stat), arch, OS_version, disk, addons, str(addons_count)]))
